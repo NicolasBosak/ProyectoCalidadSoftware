@@ -54,7 +54,8 @@
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
-                    <failsOnError>false</failsOnError> <linkXRef>false</linkXRef>
+                    <outputFile>target/checkstyle-result.xml</outputFile>
+                    <failsOnError>false</failsOnError>
                 </configuration>
                 <executions>
                     <execution>
@@ -71,8 +72,9 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${pmd.version}</version>
                 <configuration>
+                    <format>xml</format>
                     <linkXRef>false</linkXRef>
-                    <failOnViolation>false</failOnViolation> <printFailingErrors>true</printFailingErrors>
+                    <failOnViolation>false</failOnViolation>
                 </configuration>
                 <executions>
                     <execution>
