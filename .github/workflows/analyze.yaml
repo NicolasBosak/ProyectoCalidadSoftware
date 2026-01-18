@@ -11,7 +11,7 @@ permissions:
   pull-requests: read
 
 jobs:
-  analysis:
+  Analysis:
     runs-on: ubuntu-latest
 
     steps:
@@ -30,8 +30,8 @@ jobs:
       - name: Build, test & generate coverage
         run: mvn clean verify
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v1.1.0
+      - name: Analyze with SonarQube
+        uses: SonarSource/sonarqube-scan-action@7295e71c9583053f5bf40e9d4068a0c974603ec8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -43,3 +43,4 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             -Dsonar.java.source=17
             -Dsonar.java.target=17
+            -Dsonar.java.jdkHome=$JAVA_HOME
