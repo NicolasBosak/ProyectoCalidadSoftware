@@ -30,14 +30,10 @@ jobs:
       - name: Build, test & generate coverage
         run: mvn clean verify
 
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=ProyectoCalidadSoftware
-            -Dsonar.java.binaries=target
+      - name: SonarQube analysis
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=ProyectoCalidadSoftware \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
