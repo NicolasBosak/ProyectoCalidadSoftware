@@ -54,6 +54,7 @@
                 <configuration>
                     <configLocation>google_checks.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
+                    <outputFormat>xml</outputFormat>
                     <outputFile>target/checkstyle-result.xml</outputFile>
                     <failsOnError>false</failsOnError>
                 </configuration>
@@ -73,8 +74,13 @@
                 <version>${pmd.version}</version>
                 <configuration>
                     <format>xml</format>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <rulesets>
+                        <ruleset>/rulesets/java/quickstart.xml</ruleset>
+                    </rulesets>
                     <linkXRef>false</linkXRef>
                     <failOnViolation>false</failOnViolation>
+                    <cpdCheck>true</cpdCheck>
                 </configuration>
                 <executions>
                     <execution>
