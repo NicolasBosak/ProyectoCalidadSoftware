@@ -1,36 +1,49 @@
-name: Maven SonarQube Analysis
+name: SonarQube analysis
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
 
 jobs:
-  sonar:
+  analysis:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout completo (Sonar lo necesita)
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      # 2️⃣ Java 17 (coincide con tu pom)
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
+          cache: maven
 
-      - name: Build, Test & Generate Reports
+      # 3️⃣ Build + Tests + Reportes (JaCoCo / PMD / Checkstyle)
+      - name: Build with Maven
         run: mvn clean verify
 
-      - name: SonarQube Analysis
-        run: mvn sonar:sonar \
-          -Dsonar.projectKey=ProyectoCalidadSoftware \
-          -Dsonar.projectName="Proyecto Calidad Software" \
-          -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-          -Dsonar.java.pmd.reportPaths=target/pmd.xml \
-          -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
+      # 4️⃣ Análisis SonarQube
+      - name: Analyze with SonarQube
+        uses: SonarSource/sonarqube-scan-action@v1.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=ProyectoCalidadSoftware
+            -Dsonar.projectName=ProyectoCalidadSoftware
+            -Dsonar.java.binaries=target
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.sourceEncoding=UTF-8
