@@ -35,7 +35,7 @@ jobs:
           distribution: temurin
           java-version: 11
 
-      - name: Run SonarQube Scanner (Java 11 tool)
+      - name: Run SonarQube Scanner
         uses: SonarSource/sonarqube-scan-action@v1.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,5 +46,5 @@ jobs:
             -Dsonar.projectKey=ProyectoCalidadSoftware
             -Dsonar.java.binaries=target/classes
             -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xmlad
-            -Dsonar.java.source=21
-            -Dsonar.java.target=21
+            -Dsonar.java.source=11
+            -Dsonar.java.target=11
