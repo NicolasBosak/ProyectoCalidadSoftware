@@ -2,7 +2,14 @@
 
 ## 1. Proceso de Implementación
 
+
 Se partió de un proyecto Java básico con problemas de calidad: clases sin paquete, uso incorrecto de genéricos, listas paralelas, ausencia de pruebas, y sin aplicación de principios SOLID ni Clean Code. El equipo asignó roles y planificó tareas según el Plan de Acción.
+
+### Integración y Corrección de SonarQube
+- Se integró SonarQube al pipeline de GitHub Actions para análisis automático de calidad.
+- Se generó y utilizó un token seguro para la autenticación.
+- Se corrigió el archivo de workflow eliminando líneas inválidas y configurando correctamente la variable SONAR_TOKEN.
+- El análisis de SonarQube ahora se ejecuta automáticamente en cada push o pull request, y los resultados pueden consultarse en la instancia SonarQube configurada.
 
 ### Refactorización
 - Se crearon paquetes para cada dominio: inventory, orders, students, tasks.
