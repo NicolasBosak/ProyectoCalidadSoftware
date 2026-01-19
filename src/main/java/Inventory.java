@@ -1,21 +1,21 @@
+package com.example.inventory;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Inventory {
-    private List products = new ArrayList<>();
-    private List quantities = new ArrayList<>();
-    private List prices = new ArrayList<>();
+    private static final Logger logger = Logger.getLogger(Inventory.class.getName());
+    private List<Product> products = new ArrayList<>();
 
-    public void addProduct(String p, int q, double price) {
-        products.add(p);
-        quantities.add(q);
-        prices.add(price);
-        System.out.println("Product added.");
+    public void addProduct(String name, int quantity, double price) {
+        products.add(new Product(name, quantity, price));
+        logger.info("Product added.");
     }
 
     public void printInventory() {
-        for (int i = 0; i < products.size(); i++) {
-            System.out.println("Product: " + products.get(i) + ", Quantity: " + quantities.get(i) + ", Price: $" + prices.get(i));
+        for (Product product : products) {
+            logger.info(product.toString());
         }
     }
 

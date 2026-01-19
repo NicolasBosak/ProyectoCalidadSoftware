@@ -1,19 +1,21 @@
+package com.example.orders;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class OrderManager {
-    private List customers = new ArrayList<>();
-    private List orders = new ArrayList<>();
+    private static final Logger logger = Logger.getLogger(OrderManager.class.getName());
+    private List<CustomerOrder> orders = new ArrayList<>();
 
     public void addOrder(String customer, String order) {
-        customers.add(customer);
-        orders.add(order);
-        System.out.println("Order added for " + customer);
+        orders.add(new CustomerOrder(customer, order));
+        logger.info("Order added for " + customer);
     }
 
     public void listOrders() {
-        for (int i = 0; i < orders.size(); i++) {
-            System.out.println("Customer: " + customers.get(i) + ", Order: " + orders.get(i));
+        for (CustomerOrder co : orders) {
+            logger.info(co.toString());
         }
     }
 

@@ -1,19 +1,21 @@
+package com.example.students;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class StudentManager {
-    private List students = new ArrayList<>();
-    private List grades = new ArrayList<>();
+    private static final Logger logger = Logger.getLogger(StudentManager.class.getName());
+    private List<Student> students = new ArrayList<>();
 
-    public void addStudent(String s, double g) {
-        students.add(s);
-        grades.add(g);
-        System.out.println("Student added.");
+    public void addStudent(String name, double grade) {
+        students.add(new Student(name, grade));
+        logger.info("Student added.");
     }
 
     public void listStudents() {
-        for (int i = 0; i < students.size(); i++) {
-            System.out.println("Student: " + students.get(i) + ", Grade: " + grades.get(i));
+        for (Student s : students) {
+            logger.info(s.toString());
         }
     }
 

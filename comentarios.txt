@@ -1,0 +1,280 @@
+2. Análisis del Proyecto (Estado Inicial)
+Descripción general
+
+El proyecto Java base está compuesto por cuatro clases:
+
+Inventory
+
+OrderManager
+
+StudentManager
+
+TaskManager
+
+Cada clase gestiona una entidad distinta, pero todas presentan problemas de calidad comunes, tanto a nivel de diseño como de mantenibilidad, detectados mediante análisis estático (SonarQube / reglas equivalentes).
+
+Problemas de calidad identificados
+Problemas de estructura y convenciones
+
+Clases sin paquete declarado
+Todas las clases están en el default package, lo que:
+
+Dificulta la organización del código.
+
+Va en contra de las buenas prácticas Java.
+
+Afecta la mantenibilidad y escalabilidad.
+
+Regla violada: “Move this file to a named package”
+
+Uso incorrecto de genéricos
+
+Uso de List sin tipo parametrizado (List products = new ArrayList<>();)
+
+Esto genera:
+
+Pérdida de seguridad de tipos.
+Riesgo de ClassCastException.
+Menor claridad del código.
+Regla violada: “Provide the parametrized type for this generic”
+
+Diseño deficiente de datos
+
+Uso de listas paralelas (products, quantities, prices)
+
+Problemas:
+Baja cohesión.
+Riesgo de inconsistencia de datos.
+Dificultad para mantener y extender el código.
+Esto viola principios de Clean Code y SRP (Single Responsibility Principle).
+
+Uso de System.out.println
+
+Salida directa por consola en lógica de negocio.
+
+Problemas:
+No es configurable.
+No permite niveles de log.
+No es apto para entornos productivos.
+Regla violada: “Replace this use of System.out by a logger”
+
+Ausencia total de pruebas
+No existen pruebas unitarias.
+Cobertura de código = 0% (JaCoCo).
+
+Riesgos:
+No se puede validar comportamiento.
+Cambios futuros pueden introducir errores sin detección.
+Bajo nivel de confiabilidad.
+
+
+Resumen del estado inicial
+Aspecto	Estado
+Organización del código	 Deficiente
+Tipado y seguridad	 Bajo
+Principios SOLID	 No aplicados
+Logging	 Incorrecto
+Pruebas	 Inexistentes
+Cobertura de pruebas	 0%
+
+
+listo punto 2
+
+3. Propuesta de Mejora
+3.1 Organización del código
+
+Cambio propuesto
+Mover todas las clases desde el default package a paquetes con nombre.
+Detalle
+Se crearán paquetes según la responsabilidad de cada componente.
+Cada clase pertenecerá a un paquete coherente con su dominio.
+Ejemplo
+
+com.example.inventory
+com.example.orders
+com.example.students
+com.example.tasks
+Beneficio
+Mejora la mantenibilidad.
+Facilita la navegación y escalabilidad del proyecto.
+Cumple con las convenciones estándar de Java.
+
+
+
+3.2 Uso correcto de genéricos
+
+Cambio propuesto
+Parametrizar todas las colecciones (List<T>).
+Detalle
+Reemplazar listas sin tipo por listas tipadas.
+Evitar conversiones implícitas y errores en tiempo de ejecución.
+
+Ejemplo
+Antes:
+private List products = new ArrayList<>();
+
+Después:
+private List<String> products = new ArrayList<>();
+
+Beneficio
+Mayor seguridad de tipos.
+Código más claro y legible.
+Reducción de advertencias de análisis estático.
+
+
+
+3.3 Eliminación de listas paralelas
+
+Cambio propuesto
+Sustituir listas paralelas por clases de dominio.
+Detalle
+
+Crear clases simples que representen entidades del sistema.
+Cada entidad encapsulará sus propios datos.
+
+Ejemplo
+
+class Product {
+    String name;
+    int quantity;
+    double price;
+}
+
+
+Luego:
+private List<Product> products;
+
+Beneficio
+Aumento de cohesión.
+Reducción del acoplamiento.
+Menor riesgo de inconsistencias.
+
+
+
+3.4 Mejora de responsabilidades
+
+Cambio propuesto
+Limitar cada clase a una única responsabilidad.
+
+Detalle
+Las clases administradoras solo gestionarán colecciones.
+Los objetos de dominio representarán datos.
+Se eliminará lógica duplicada entre clases.
+
+Ejemplo
+
+
+Inventory → solo gestiona productos.
+Product → representa información del producto.
+Beneficio
+
+Cumplimiento del principio SRP.
+Código más fácil de entender y modificar.
+
+
+
+
+3.5 Reemplazo de salida por consola
+
+Cambio propuesto
+Eliminar System.out.println de la lógica de negocio.
+
+Detalle
+Sustituir mensajes directos por un mecanismo de log.
+Centralizar la salida de mensajes.
+Ejemplo
+Antes:
+
+System.out.println("Product added.");
+
+Después:
+
+log.info("Product added");
+
+Beneficio
+Código más profesional.
+Mejor control del comportamiento de salida.
+Compatibilidad con entornos reales.
+
+
+
+3.6 Manejo seguro de índices
+
+Cambio propuesto
+
+Validar índices antes de acceder o eliminar elementos.
+
+Detalle
+
+Evitar accesos fuera de rango.
+
+Agregar controles previos a operaciones de eliminación.
+
+Ejemplo
+
+if (id > 0 && id <= tasks.size()) {
+    tasks.remove(id - 1);
+}
+
+
+Beneficio
+
+Prevención de errores en tiempo de ejecución.
+
+Mayor robustez del sistema.
+
+3.7 Incorporación de pruebas unitarias
+
+Cambio propuesto
+
+Crear pruebas unitarias para cada clase principal.
+
+Detalle
+
+Probar métodos públicos.
+
+Verificar comportamientos esperados.
+
+Cubrir escenarios válidos e inválidos.
+
+Ejemplo
+
+addProduct() incrementa el inventario.
+
+removeTask() elimina correctamente una tarea.
+
+Beneficio
+
+Incremento de cobertura.
+
+Detección temprana de errores.
+
+Mayor confianza en el código.
+
+3.8 Estandarización de estilo
+
+Cambio propuesto
+
+Ajustar el código a reglas de estilo definidas.
+
+Detalle
+
+Convenciones de nombres.
+
+Longitud de métodos.
+
+Formato consistente.
+
+Beneficio
+
+Código homogéneo.
+
+Mayor legibilidad.
+
+Menor esfuerzo de mantenimiento.
+
+[10:35 a. m., 18/1/2026] Nicolas: una vez cambie, suba cambios a main y solito vuelve a analizar
+[10:35 a. m., 18/1/2026] Nicolas: eso debe quedar en 0
+[10:35 a. m., 18/1/2026] Nicolas: que herramientas usamos, sonnar-kubernetes  coverage
+[10:35 a. m., 18/1/2026] Nicolas: ahh y los test
+[10:35 a. m., 18/1/2026] Nicolas: y liiiiisto
